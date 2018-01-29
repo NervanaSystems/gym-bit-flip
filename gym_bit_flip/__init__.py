@@ -1,1 +1,1 @@
-from bit_flip import BitFlip
+from .bit_flip import BitFlip
