@@ -10,6 +10,8 @@ class BitFlip(gym.Env):
 
     def __init__(self, bit_length=16, max_steps=None):
         super(BitFlip, self).__init__()
+        if bit_length < 1:
+            raise ValueError('bit_length must be >= 1, found {}'.format(bit_length))
         self.bit_length = bit_length
 
         if max_steps is None:
@@ -36,7 +38,7 @@ class BitFlip(gym.Env):
         return -1 if self.state != self.target else 0
 
     def _step(self, action):
-        # action an int (0, self.bit_length)
+        # action is an int in the range [0, self.bit_length)
         self.state[action] = not self.state[action]
         self.steps += 1
 
@@ -44,8 +46,13 @@ class BitFlip(gym.Env):
 
     def _reset(self):
         self.steps = 0
-        self.state = [random.choice([1, 0]) for _ in self.bit_length]
-        self.target = [random.choice([1, 0]) for _ in self.bit_length]
+
+        self.state = [random.choice([1, 0]) for _ in range(self.bit_length)]
+
+        # make sure target is not the initial state
+        self.target = None
+        while self.target == self.state:
+            self.target = [random.choice([1, 0]) for _ in range(self.bit_length)]
 
         return self._get_obs()
 
