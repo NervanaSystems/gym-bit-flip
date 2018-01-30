@@ -1,3 +1,4 @@
+import numpy as np
 import gym
 from gym import spaces
 import random
@@ -32,14 +33,14 @@ class BitFlip(gym.Env):
         self.reset()
 
     def _terminate(self):
-        return self.state == self.target or self.steps >= self.max_steps
+        return (self.state == self.target).all() or self.steps >= self.max_steps
 
     def _reward(self):
-        return -1 if self.state != self.target else 0
+        return -1 if (self.state != self.target).all() else 0
 
     def _step(self, action):
         # action is an int in the range [0, self.bit_length)
-        self.state[action] = not self.state[action]
+        self.state[action] = int(not self.state[action])
         self.steps += 1
 
         return (self._get_obs(), self._reward(), self._terminate(), {})
@@ -47,12 +48,12 @@ class BitFlip(gym.Env):
     def _reset(self):
         self.steps = 0
 
-        self.state = [random.choice([1, 0]) for _ in range(self.bit_length)]
+        self.state = np.array([random.choice([1, 0]) for _ in range(self.bit_length)])
 
         # make sure target is not the initial state
-        self.target = None
-        while self.target == self.state:
-            self.target = [random.choice([1, 0]) for _ in range(self.bit_length)]
+        self.target = self.state
+        while (self.target == self.state).all():
+            self.target = np.array([random.choice([1, 0]) for _ in range(self.bit_length)])
 
         return self._get_obs()
 
