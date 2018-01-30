@@ -33,10 +33,10 @@ class BitFlip(gym.Env):
         self.reset()
 
     def _terminate(self):
-        return (self.state == self.target).all() or self.steps >= self.max_steps
+        return (self.state == self.goal).all() or self.steps >= self.max_steps
 
     def _reward(self):
-        return -1 if (self.state != self.target).all() else 0
+        return -1 if (self.state != self.goal).all() else 0
 
     def _step(self, action):
         # action is an int in the range [0, self.bit_length)
@@ -50,15 +50,18 @@ class BitFlip(gym.Env):
 
         self.state = np.array([random.choice([1, 0]) for _ in range(self.bit_length)])
 
-        # make sure target is not the initial state
-        self.target = self.state
-        while (self.target == self.state).all():
-            self.target = np.array([random.choice([1, 0]) for _ in range(self.bit_length)])
+        # make sure goal is not the initial state
+        self.goal = self.state
+        while (self.goal == self.state).all():
+            self.goal = np.array([random.choice([1, 0]) for _ in range(self.bit_length)])
 
         return self._get_obs()
 
     def _get_obs(self):
-        return self.state
+        return {
+            'state': self.state,
+            'goal': self.goal,
+        }
 
     def _render(self, mode='human', close=False):
         pass
