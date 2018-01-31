@@ -9,11 +9,12 @@ class BitFlip(gym.Env):
         'render.modes': ['human', 'rgb_array'], 'video.frames_per_second': 30
     }
 
-    def __init__(self, bit_length=16, max_steps=None):
+    def __init__(self, bit_length=16, max_steps=None, mean_zero=False):
         super(BitFlip, self).__init__()
         if bit_length < 1:
             raise ValueError('bit_length must be >= 1, found {}'.format(bit_length))
         self.bit_length = bit_length
+        self.mean_zero = mean_zero
 
         if max_steps is None:
             # default to 2x bit_length
@@ -58,8 +59,13 @@ class BitFlip(gym.Env):
         return self._get_obs()
 
     def _get_obs(self):
+        if self.mean_zero:
+            state = self.state - 0.5
+        else:
+            state = self.state
+
         return {
-            'state': self.state,
+            'state': state,
             'goal': self.goal,
         }
 

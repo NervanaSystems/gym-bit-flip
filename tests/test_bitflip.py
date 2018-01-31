@@ -51,3 +51,11 @@ def test_reward():
     _, reward, _, _ = bit_flip._step(0)
 
     assert reward == -1
+
+
+def test_mean_zero():
+    bit_flip = BitFlip(mean_zero=True)
+    state, _, _, _ = bit_flip._step(0)
+
+    assert 0.5 in state['state']
+    assert -0.5 in state['state']
