@@ -17,8 +17,8 @@ class BitFlip(gym.Env):
         self.mean_zero = mean_zero
 
         if max_steps is None:
-            # default to 2x bit_length
-            self.max_steps = bit_length * 2
+            # default to bit_length
+            self.max_steps = bit_length
         elif max_steps == 0:
             self.max_steps = None
         else:
