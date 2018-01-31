@@ -35,3 +35,19 @@ def test_bitflip_not_terminate_short():
 def test_bitflip_bit_length_0():
     with pytest.raises(ValueError):
         BitFlip(bit_length=0)
+
+
+def test_reward():
+    bit_flip = BitFlip(2)
+    bit_flip.state = np.array([0, 0])
+    bit_flip.goal = np.array([1, 0])
+    _, reward, _, _ = bit_flip._step(1)
+
+    assert reward == -1
+
+
+def test_reward():
+    bit_flip = BitFlip(256)
+    _, reward, _, _ = bit_flip._step(0)
+
+    assert reward == -1

@@ -36,7 +36,7 @@ class BitFlip(gym.Env):
         return (self.state == self.goal).all() or self.steps >= self.max_steps
 
     def _reward(self):
-        return -1 if (self.state != self.goal).all() else 0
+        return -1 if (self.state != self.goal).any() else 0
 
     def _step(self, action):
         # action is an int in the range [0, self.bit_length)
