@@ -58,15 +58,17 @@ class BitFlip(gym.Env):
 
         return self._get_obs()
 
-    def _get_obs(self):
+    def _mean_zero(self, x):
         if self.mean_zero:
-            state = self.state - 0.5
+            return x - 0.5
         else:
-            state = self.state
+            return x
 
+
+    def _get_obs(self):
         return {
-            'state': state,
-            'goal': self.goal,
+            'state': self._mean_zero(self.state),
+            'goal': self._mean_zero(self.goal),
         }
 
     def _render(self, mode='human', close=False):

@@ -59,3 +59,5 @@ def test_mean_zero():
 
     assert 0.5 in state['state']
     assert -0.5 in state['state']
+    assert 0.5 in state['goal']
+    assert -0.5 in state['goal']
