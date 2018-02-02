@@ -46,7 +46,31 @@ def test_reward():
     assert reward == -1
 
 
-def test_reward():
+def test_reward_expected_success():
+    bit_flip = BitFlip(2)
+    bit_flip.state = np.array([0, 0])
+    bit_flip.goal = np.array([1, 0])
+    _, reward, terminate, _ = bit_flip._step(0)
+
+    assert reward == 0
+    assert terminate == True
+
+
+def test_reward_expected_success_long():
+    bit_flip = BitFlip(2)
+    bit_flip.state = np.array([0, 0])
+    bit_flip.goal = np.array([1, 1])
+
+    _, reward, terminate, _ = bit_flip._step(0)
+    assert reward == -1
+    assert terminate == False
+
+    _, reward, terminate, _ = bit_flip._step(1)
+    assert reward == 0
+    assert terminate == True
+
+
+def test_reward_expected_failure():
     bit_flip = BitFlip(256)
     _, reward, _, _ = bit_flip._step(0)
 
@@ -57,7 +81,7 @@ def test_mean_zero():
     bit_flip = BitFlip(mean_zero=True)
     state, _, _, _ = bit_flip._step(0)
 
-    assert 0.5 in state['state']
-    assert -0.5 in state['state']
-    assert 0.5 in state['goal']
-    assert -0.5 in state['goal']
+    assert 1 in state['state']
+    assert -1 in state['state']
+    assert 1 in state['goal']
+    assert -1 in state['goal']

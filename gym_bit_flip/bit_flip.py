@@ -60,7 +60,7 @@ class BitFlip(gym.Env):
 
     def _mean_zero(self, x):
         if self.mean_zero:
-            return x - 0.5
+            return (x - 0.5) / 0.5
         else:
             return x
 
